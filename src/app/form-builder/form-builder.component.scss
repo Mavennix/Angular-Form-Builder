@@ -1,4 +1,77 @@
-/* You can add global styles to this file, and also import other style files */
+app-form-builder {
+  .ngx-dnd-container {
+  background-color: rgba(255,255,255,.2);
+  border: none;
+  margin: 10px;
+  padding: 10px;
+}
+
+.ngx-dnd-item {
+  margin: 10px;
+  padding: 10px;
+  background-color: rgba(0,0,0,.2);
+  transition: opacity .4s ease-in-out;
+  border: none;
+  display: block;
+}
+
+.ngx-dnd-item:hover {
+  border: none;
+}
+
+.ngx-dnd-container.gu-empty {
+  border: 1px dashed rgb(172, 172, 172);
+  background-color: transparent;
+  min-height: 55px;
+}
+
+
+
+.drag-container .ngx-dnd-container .ngx-dnd-item {
+  background-color: transparent;
+  border-bottom: 1px solid #fff;
+}
+
+.drag-container .ngx-dnd-container{
+  background-color: #eee;
+  margin: 0;
+  padding: 0;
+}
+
+.drop-container .ngx-dnd-container{
+  margin: 0;
+  background-color: white;
+  padding: 20px;
+  border: 1px dashed rgb(172, 172, 172);
+}
+
+.drop-container .ngx-dnd-container .ngx-dnd-item {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+}
+
+
+.edit-modal {
+  position: fixed;
+  z-index: 999; 
+  left: 0;
+  top: 0;
+  overflow: auto;
+  width: 100%;
+  height: 100%; 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+a i.material-icons {
+  cursor: pointer;
+  font-size: 17px;
+  margin: 0 5px;
+  padding: 3px;
+}
+
+
+// UI KiT
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
@@ -42,6 +115,7 @@ label {
 
 .form-group {
     margin-bottom:30px;
+    background: inherit;
 
     label {
         font-weight: bold;
@@ -153,7 +227,7 @@ label {
   }
   /* CSS3 on/off switches */
 
-  .switch-square + .lable::before, .switch-rounded + .lable::before, {
+  .switch-square + .lable::before, .switch-rounded + .lable::before {
     font-weight: normal;
     font-size: 11px;
     line-height: 17px;
@@ -186,7 +260,7 @@ label {
     }
 }
 
-  .switch-square.switch-bootstrap + .lable::before, .switch-rounded.switch-bootstrap + .lable::before, {
+  .switch-square.switch-bootstrap + .lable::before, .switch-rounded.switch-bootstrap + .lable::before {
     box-shadow: none;
     border-width: 0;
     font-size: 16px;
@@ -388,3 +462,5 @@ label {
     padding: 15px;
     margin: 50px auto;
   }
+
+}

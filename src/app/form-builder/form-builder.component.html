@@ -1,0 +1,178 @@
+<div class="row containe-fluid m-0">
+  <div class="col-3">
+    <div class="text-center bg-dark text-white p-3">
+      <h4>Source</h4>
+    </div>
+    
+    <ngx-dnd-container
+      class="drag-container m-0 p-0"
+      [model]="sourceBuilderTools"
+      [dropZones]="['builder-target']"
+      [moves]= "true"
+      [copy]="true"
+      [droppableItemClass]="droppableItemClass"
+      (drag)="log($event)">
+
+      <ng-template let-item="model" class="ngx-dnd-item">
+        <div (click)="clickDrop(item)">{{item.name}}</div>
+        
+      </ng-template>
+    </ngx-dnd-container>
+
+  </div>
+  <div class="col-8">
+    <h4>Target</h4>
+
+    <ngx-dnd-container
+      class="drop-container"
+      [model]="targetBuilderTools"
+      dropZone="builder-target"
+      [removeOnSpill]="true"
+      [moves]= "true"
+      [droppableItemClass]="droppableItemClass"
+      (drag)="log($event)"
+      (drop)="builderDrag($event)"
+      (over)="log($event)"
+      (out)="log($event)"
+      (remove)="log($event)"
+>
+
+      <ng-template let-model="model" let-template="template" >
+<div      (mouseenter)="onHover(model)"
+(mouseleave)="onHover(-1)"  >
+        <div class="actions text-muted" *ngIf="model.uid == hoverItem" >
+          <a role="button" (click)="onEdit(model)"><i class="material-icons ">create</i></a>
+          <a role="button" (click)="clickDrop(model)"><i class="material-icons">file_copy </i></a>
+          <a role="button" (click)="onDelete(model)"><i class="material-icons">delete</i></a>
+        </div>
+        
+        <div [ngSwitch]="model.inputType">
+          
+          <div *ngSwitchCase="'col'">
+            <div class="row">
+              <div class="col-{{col.grid}}"  *ngFor="let col of model.col; let i = index">
+                  <div class="">
+                      {{model.name}}
+                      <ngx-dnd-container
+                        dropZone="builder-target"
+                        [model]="model.col[i].children"
+                        [removeOnSpill]="true"
+                        [template]="template"
+                        [droppableItemClass]="droppableItemClass"
+                        (drag)="log($event)"
+                        (drop)="builderDrag($event)"
+                        (over)="log($event)"
+                        (out)="log($event)"
+                        (remove)="log($event)"
+                        (cancel)="log($event)">
+                      </ngx-dnd-container>
+                    </div>
+              </div>
+            </div>
+           
+          </div>
+          <div *ngSwitchCase="'button'">
+            <button [attr.type]="model.inputType" class="btn btn-success" > {{ model.name }}</button>
+          </div>
+          <div *ngSwitchDefault class="form-group">
+            <label>{{model.name}}</label>
+            <input [attr.type]="model.inputType" [id]="model.uid" class="form-control" [ngModel]="model.data">
+            <small id= "{{model.uid}}_desc" class="form-text text-muted">{{model.desc}}</small>
+          </div>
+          <!-- Radio Button -->
+          <div class="custom-control custom-radio" *ngSwitchCase="'radio'">
+            <input [attr.type]="model.inputType" id="{{model.uid}}" name="customRadio" class="custom-control-input">
+            <label class="custom-control-label" for="{{model.uid}}">{{model.name}}</label>
+          </div>
+          <!-- Check Box -->
+          <div class="custom-control custom-checkbox" *ngSwitchCase="'checkbox'">
+            <input [attr.type]="model.inputType" class="custom-control-input" id="{{model.uid}}">
+            <label class="custom-control-label" for="{{model.uid}}">{{model.name}}</label>
+          </div>
+          <!-- Switch -->
+          <div class="" *ngSwitchCase="'switchbox'">
+          <label class="label-switch switch-color">
+            <input type="checkbox" class="switch-square switch-bootstrap yes-no " value="1" checked="checked">
+            <span class="lable"></span></label>
+          </div>
+          <!-- Select -->
+          <div class="" *ngSwitchCase="'select'">
+          <select class="custom-select">
+            <option selected>Open this select menu</option>
+            <option value="1">Option One</option>
+            <option value="2">Option Two</option>
+            <option value="3">Option Three</option>
+          </select>
+          </div></div>
+        </div>
+      </ng-template>
+    </ngx-dnd-container>
+  </div>
+
+</div>
+
+<!-- Model Binding -->
+<!-- <div>
+  <h3>Model</h3>
+  <pre><code>{{targetBuilderTools | json}}</code></pre>
+</div> -->
+
+
+
+<!-- Modal -->
+
+<div class="edit-modal" [hidden]="!openEditModal" *ngIf="getEditElement">
+    <div class="container d-flex h-100">
+      <div class="row w-100 justify-content-center align-items-center">
+        <div class="col-7 p-3 bg-white">
+          <main>
+            <div class="row">
+              <div class="col">
+                <!-- <b>{{ getEditElement.uid }}</b> -->
+              </div>
+              <div class="col-auto">
+                <a (click)="openEditModal = !openEditModal"><i class="material-icons">
+                    clear</i></a>
+              </div>
+            </div>
+          </main>
+          <div>
+
+              <form>
+                  <div class="form-group mb-1">
+                    <label for="label">Label</label>
+                    <input type="text" class="form-control" id="label" aria-describedby="labelDesc" placeholder="{{ getEditElement.name }}" value="{{ getEditElement.name }}">
+                    <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                  </div>
+                  <div class="custom-control custom-checkbox mb-3">
+                      <input type="checkbox" class="custom-control-input"id="labelHide">
+                      <label class="custom-control-label" for="labelHide">Hide Label</label>
+                    </div>
+                  <div class="form-group">
+                      <label for="labelPosition">Label Position</label>
+                      <select class="custom-select" id="labelPosition">
+                          <option selected>Top</option>
+                          <option value="1">Right</option>
+                          <option value="2">Left</option>
+                          <option value="3">Bottom</option>
+                        </select>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="placeholder">Placeholder</label>
+                      <input type="text" class="form-control" id="placeholder" aria-describedby="placeholder" placeholder="Placeholder">
+                      <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                    </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+          </div>
+          <div>
+           Input Type: <b>{{ getEditElement.inputType }}</b>
+          </div>
+          <div>
+            Element ID: <b>{{ getEditElement.uid }}</b>
+           </div>
+        </div>
+      </div>
+    </div>
+</div>
